@@ -26,6 +26,10 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## NOTE
+
+yarn intall -> yarn start -> http://localhost:8080/swagger#/
+
 ## Installation
 
 ```bash
@@ -71,4 +75,4 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
-"# cuoikhoaBE" 
+"# cuoikhoaBE"

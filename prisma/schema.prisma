@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model BannerAds {
+  BannerID  Int      @id @default(autoincrement())
+  CinemaID  Int?
+  ImageURL  String?  @db.VarChar(255)
+  TargetURL String?  @db.VarChar(255)
+  Cinemas   Cinemas? @relation(fields: [CinemaID], references: [CinemaID], onDelete: NoAction, onUpdate: NoAction, map: "BannerAds_ibfk_1")
+
+  @@index([CinemaID], map: "CinemaID")
+}
+
+model CinemaGroups {
+  GroupID        Int           @id @default(autoincrement())
+  GroupName      String?       @db.VarChar(255)
+  Description    String?       @db.Text
+  SystemCinemaID Int?
+  SystemCinema   SystemCinema? @relation(fields: [SystemCinemaID], references: [SystemCinemaID], onDelete: NoAction, onUpdate: NoAction, map: "CinemaGroups_ibfk_1")
+  Cinemas        Cinemas[]
+
+  @@index([SystemCinemaID], map: "SystemCinemaID")
+}
+
+model Cinemas {
+  CinemaID     Int            @id @default(autoincrement())
+  CinemaName   String?        @db.VarChar(255)
+  Address      String?        @db.VarChar(255)
+  Phone        String?        @db.VarChar(20)
+  GroupID      Int?
+  BannerAds    BannerAds[]
+  CinemaGroups CinemaGroups?  @relation(fields: [GroupID], references: [GroupID], onDelete: NoAction, onUpdate: NoAction, map: "Cinemas_ibfk_1")
+  HotTimeSlots HotTimeSlots[]
+  Showtimes    Showtimes[]
+
+  @@index([GroupID], map: "GroupID")
+}
+
+model HotMovies {
+  HotMovieID Int       @id @default(autoincrement())
+  MovieID    Int?
+  StartDate  DateTime? @db.Date
+  EndDate    DateTime? @db.Date
+  Movies     Movies?   @relation(fields: [MovieID], references: [MovieID], onDelete: NoAction, onUpdate: NoAction, map: "HotMovies_ibfk_1")
+
+  @@index([MovieID], map: "MovieID")
+}
+
+model HotTimeSlots {
+  HotTimeSlotID Int       @id @default(autoincrement())
+  CinemaID      Int?
+  StartTime     DateTime? @db.Time(0)
+  EndTime       DateTime? @db.Time(0)
+  Cinemas       Cinemas?  @relation(fields: [CinemaID], references: [CinemaID], onDelete: NoAction, onUpdate: NoAction, map: "HotTimeSlots_ibfk_1")
+
+  @@index([CinemaID], map: "CinemaID")
+}
+
+model Movies {
+  MovieID     Int         @id @default(autoincrement())
+  MovieTitle  String?     @db.VarChar(255)
+  ReleaseDate DateTime?   @db.Date
+  Genre       String?     @db.VarChar(100)
+  Duration    Int?
+  Description String?     @db.Text
+  HotMovies   HotMovies[]
+  Showtimes   Showtimes[]
+}
+
+model Showtimes {
+  ShowtimeID Int       @id @default(autoincrement())
+  CinemaID   Int?
+  MovieID    Int?
+  StartTime  DateTime? @db.DateTime(0)
+  EndTime    DateTime? @db.DateTime(0)
+  Price      Int?
+  Cinemas    Cinemas?  @relation(fields: [CinemaID], references: [CinemaID], onDelete: NoAction, onUpdate: NoAction, map: "Showtimes_ibfk_1")
+  Movies     Movies?   @relation(fields: [MovieID], references: [MovieID], onDelete: NoAction, onUpdate: NoAction, map: "Showtimes_ibfk_2")
+
+  @@index([CinemaID], map: "CinemaID")
+  @@index([MovieID], map: "MovieID")
+}
+
+model SystemCinema {
+  SystemCinemaID          Int            @id @default(autoincrement())
+  SystemCinemaName        String?        @db.VarChar(255)
+  SystemCinemaDescription String?        @db.Text
+  CinemaGroups            CinemaGroups[]
+}
+
+model Users {
+  UserID   Int     @id @default(autoincrement())
+  Username String? @db.VarChar(255)
+  Password String? @db.VarChar(255)
+  Email    String? @db.VarChar(255)
+  Age      Int?
+  avatar   String? @db.VarChar(255)
+  role     String? @db.VarChar(255)
+}
