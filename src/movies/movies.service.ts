@@ -15,18 +15,35 @@ export class MoviesService {
   }
 
   findAll() {
-    return this.model.movies.findMany();
+    return this.model.movies.findMany({
+      orderBy: { MovieID: "desc" }
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} movie`;
+    return this.model.movies.findFirst({
+      where: { MovieID: id }
+    });
+  }
+  search(title: string) {
+    return this.model.movies.findMany({
+      where: {
+        MovieTitle: { contains: title }
+      }
+    })
   }
 
   update(id: number, updateMovieDto: UpdateMovieDto) {
-    return `This action updates a #${id} movie`;
+    return this.model.movies.update({
+      where: { MovieID: id },
+      data: updateMovieDto
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} movie`;
+    return this.model.movies.delete({
+      where: { MovieID: id }
+    });
   }
+
 }

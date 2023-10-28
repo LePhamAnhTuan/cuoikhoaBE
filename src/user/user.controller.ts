@@ -8,7 +8,7 @@ import { request } from 'http';
 import { ExtractJwt } from 'passport-jwt';
 import { JwtStrategy } from 'src/strantegy/jwt.strantegy';
 @ApiTags("User")
-@Controller('')
+@Controller('user')
 @UseGuards(AuthGuard("jwt"))
 @ApiBearerAuth()
 export class UserController {
@@ -35,7 +35,7 @@ export class UserController {
     return { id, updateUserDto };
   }
 
-  @Patch('/delete')
+  @Post('/delete')
   remove(@Query('id') id: string) {
 
     return this.userService.remove(+id);

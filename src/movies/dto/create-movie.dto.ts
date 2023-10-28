@@ -16,4 +16,7 @@ export class CreateMovieDto {
 
     @ApiProperty()
     Description: string
+
+    @ApiProperty()
+    MovieImage: string
 }

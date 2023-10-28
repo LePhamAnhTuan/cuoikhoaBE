@@ -17,11 +17,9 @@ export class UserService {
   async findAll() {
     try {
       const data = await this.model.users.findMany({
-        select: {
-          UserID: true,
-          Username: true,
-          Email: true,
-          Password: true
+        where: {
+          isRemove: false || null
+
         }
       })
       return successCode(data)
@@ -34,7 +32,9 @@ export class UserService {
   async findOne(id: number) {
     return await this.model.users.findUnique({
       where: {
-        UserID: id
+        UserID: id,
+        isRemove: false || null
+
       }
     });
   }
@@ -57,6 +57,7 @@ export class UserService {
     const checkId = await this.model.users.findUnique({
       where: {
         UserID: id
+
       }
     })
     if (!checkId) {

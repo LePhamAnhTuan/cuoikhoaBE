@@ -10,6 +10,7 @@ datasource db {
 model BannerAds {
   BannerID  Int      @id @default(autoincrement())
   CinemaID  Int?
+  isRemove Boolean?
   ImageURL  String?  @db.VarChar(255)
   TargetURL String?  @db.VarChar(255)
   Cinemas   Cinemas? @relation(fields: [CinemaID], references: [CinemaID], onDelete: NoAction, onUpdate: NoAction, map: "BannerAds_ibfk_1")
@@ -22,6 +23,7 @@ model CinemaGroups {
   GroupName      String?       @db.VarChar(255)
   Description    String?       @db.Text
   SystemCinemaID Int?
+  isRemove Boolean?
   SystemCinema   SystemCinema? @relation(fields: [SystemCinemaID], references: [SystemCinemaID], onDelete: NoAction, onUpdate: NoAction, map: "CinemaGroups_ibfk_1")
   Cinemas        Cinemas[]
 
@@ -34,9 +36,11 @@ model Cinemas {
   Address      String?        @db.VarChar(255)
   Phone        String?        @db.VarChar(20)
   GroupID      Int?
+  isRemove Boolean?
   BannerAds    BannerAds[]
   CinemaGroups CinemaGroups?  @relation(fields: [GroupID], references: [GroupID], onDelete: NoAction, onUpdate: NoAction, map: "Cinemas_ibfk_1")
   HotTimeSlots HotTimeSlots[]
+  Seats        Seats[]
   Showtimes    Showtimes[]
 
   @@index([GroupID], map: "GroupID")
@@ -47,6 +51,7 @@ model HotMovies {
   MovieID    Int?
   StartDate  DateTime? @db.Date
   EndDate    DateTime? @db.Date
+  isRemove Boolean?
   Movies     Movies?   @relation(fields: [MovieID], references: [MovieID], onDelete: NoAction, onUpdate: NoAction, map: "HotMovies_ibfk_1")
 
   @@index([MovieID], map: "MovieID")
@@ -57,6 +62,7 @@ model HotTimeSlots {
   CinemaID      Int?
   StartTime     DateTime? @db.Time(0)
   EndTime       DateTime? @db.Time(0)
+  isRemove Boolean?
   Cinemas       Cinemas?  @relation(fields: [CinemaID], references: [CinemaID], onDelete: NoAction, onUpdate: NoAction, map: "HotTimeSlots_ibfk_1")
 
   @@index([CinemaID], map: "CinemaID")
@@ -69,8 +75,25 @@ model Movies {
   Genre       String?     @db.VarChar(100)
   Duration    Int?
   Description String?     @db.Text
+  MovieImage  String?     @db.VarChar(255)
+  isRemove Boolean?
   HotMovies   HotMovies[]
+  Seats       Seats[]
   Showtimes   Showtimes[]
+}
+
+model Seats {
+  SeatID   Int      @id @default(autoincrement())
+  CinemaID Int?
+  MovieID  Int?
+  RowSeat  Int?
+  Seat     Json
+  isRemove Boolean?
+  Cinemas  Cinemas? @relation(fields: [CinemaID], references: [CinemaID], onDelete: NoAction, onUpdate: NoAction, map: "Seats_ibfk_1")
+  Movies   Movies?  @relation(fields: [MovieID], references: [MovieID], onDelete: NoAction, onUpdate: NoAction, map: "Seats_ibfk_2")
+
+  @@index([CinemaID], map: "CinemaID")
+  @@index([MovieID], map: "MovieID")
 }
 
 model Showtimes {
@@ -80,6 +103,7 @@ model Showtimes {
   StartTime  DateTime? @db.DateTime(0)
   EndTime    DateTime? @db.DateTime(0)
   Price      Int?
+  isRemove Boolean?
   Cinemas    Cinemas?  @relation(fields: [CinemaID], references: [CinemaID], onDelete: NoAction, onUpdate: NoAction, map: "Showtimes_ibfk_1")
   Movies     Movies?   @relation(fields: [MovieID], references: [MovieID], onDelete: NoAction, onUpdate: NoAction, map: "Showtimes_ibfk_2")
 
@@ -91,6 +115,7 @@ model SystemCinema {
   SystemCinemaID          Int            @id @default(autoincrement())
   SystemCinemaName        String?        @db.VarChar(255)
   SystemCinemaDescription String?        @db.Text
+  isRemove Boolean?
   CinemaGroups            CinemaGroups[]
 }
 
@@ -102,4 +127,5 @@ model Users {
   Age      Int?
   avatar   String? @db.VarChar(255)
   role     String? @db.VarChar(255)
+  isRemove Boolean?
 }

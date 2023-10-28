@@ -5,7 +5,7 @@ import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
 import { SignUpDto, UserLoginDto } from "./dto/auth.dto"
 @ApiTags("Auth")
-@Controller('')
+@Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
